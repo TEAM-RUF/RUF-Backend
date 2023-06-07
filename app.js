@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const cors = require('cors');
+const mongoose = require("mongoose");
+require('dotenv').config();
 
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
@@ -22,7 +24,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+app.use(cors({
+    origin: '*'
+}));
 
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
@@ -45,6 +49,16 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(process.env.PORT || 3030, () => console.log('Example app listening on port 3030'));
+app.listen(process.env.PORT || 3030, () => console.log('Gym-Bot listening on port 3030'));
+
+// DB connection
+const dbAddress = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST;
+
+mongoose.connect(dbAddress, {
+    // useNewUrlPaser: true,
+    // useUnifiedTofology: true,
+    // useCreateIndex: true,
+    // useFindAndModify: false,
+}).then(() => console.log("MongoDB Connected")).catch((err) => console.log(err));
 
 module.exports = app;
