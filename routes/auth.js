@@ -3,17 +3,14 @@ var router = express.Router();
 
 const { UserData } = require("../models/user_data");
 
+// controller로 분리하지 않고 route에서 바로 구현
 router.get("/", (req, res) => {
-  	res.status(200).send({message : "사용자 인증 페이지"});
+  	res.status(200).send({message : "사용자 인증 로직"});
 });
 
 router.post('/signup', async (req, res) => {
-	console.log(req.body);
-	
 	try {
 		const userData = new UserData(req.body);
-		//post로 넘어온 데이터를 받아서 DB에 저장
-		//user 모델에서 mongoose에 연결 => 바로 데이터베이스에 저장
 		const userStatus = await userData.save();
 
 		if (!userStatus){
@@ -26,6 +23,45 @@ router.post('/signup', async (req, res) => {
 		res.status(500).send(err);
 		console.log(err);
 	}
+});
+
+router.get('/login', async (req, res) => {
+	try{
+		const user = await UserData.findOne({ email: req.query.email })
+		
+		if(user){
+			  user
+				.comparePassword(req.query.password)
+				.then((isMatch) => {
+				  if (!isMatch) {
+					return res.json({
+					  loginSuccess: false,
+					  message: "Invalid Password",
+					});
+				  }
+				  //비밀번호 일치했을 때 토큰 생성
+				  user
+					.generateToken() //jwt 토큰 생성
+					.then((user) => {
+					  res
+						// .cookie("x_auth", user.token)
+						.status(200)
+						.json({ loginSuccess: true, userToken : user.token }); // userId: user._id
+					})
+					.catch((err) => {
+					  res.status(400).send({loginSuccess: false, err});
+					});
+				})
+				.catch((err) => res.json({ loginSuccess: false, err }));
+			}else {
+			  res.status(400).send({loginSuccess: false, message: "No Such User"});
+			}
+	}catch (err){
+		return res.json({
+			loginSuccess: false,
+			message: err,
+		});
+	 }
 });
 
 module.exports = router;
