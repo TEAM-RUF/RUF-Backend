@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
 	},
 	surveyID: {
 		type: String,
-		maxlength: 30,
+		maxlength: 100,
 		'default':"N/A", 
 	},
 });
@@ -61,17 +61,15 @@ userSchema.methods.generateToken = function () {
     .catch((err) => err);
 };
 
-userSchema.statics.findByToken = function (token) {
-  let user = this;
-  // secretToken을 통해 user의 id값을 받아옴
-  // 해당 아이디로 DB의 데이터 가져옴
+userSchema.statics.getIdByToken = async (token) => {
   return jwt.verify(token, "secretToken", function (err, decoded) {
-    return user
-      .findOne({ _id: decoded })
-      .then((user) => user)
-      .catch((err) => err);
-  });
-};
+	  try{
+		  return decoded;
+	  }catch(err){
+		  return err;
+	  }
+  }
+)};
 
 const UserData = mongoose.model("UserData", userSchema);
 

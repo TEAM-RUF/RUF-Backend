@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
-const { UserData } = require("../models/user_data");
+const  ObjectID = require('mongodb').ObjectId;
+const { UserData } = require("./user_data");
 
 const surveySchema = mongoose.Schema({
 	machine: {
@@ -25,11 +26,12 @@ const surveySchema = mongoose.Schema({
 	},
 });
 
-surveySchema.statics.findByUserToken = function (token) {
-	const user = UserData.findByToken(req.query.token);
-	if(!user)
-		return -1; // no such user
-	return user.surveyID();
+surveySchema.statics.getIdByToken  = async (token) => {
+  	const _id = UserData.getIdByToken(token);
+	console.log(_id);
+	const user = UserData.findById(new ObjectID(_id));
+	
+	return user.surveyID;
 };
 
 const SurveyData = mongoose.model("SurveyData", surveySchema);
