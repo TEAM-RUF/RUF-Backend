@@ -39,9 +39,8 @@ router.get('/login', async (req, res) => {
 					  message: "Invalid Password",
 					});
 				  }
-				  //비밀번호 일치했을 때 토큰 생성
 				  user
-					.generateToken() //jwt 토큰 생성
+					.generateToken()
 					.then((user) => {
 					  res
 						// .cookie("x_auth", user.token)

@@ -17,6 +17,11 @@ const userSchema = mongoose.Schema({
 		type: String,
 		minLength: 5,
 	},
+	surveyID: {
+		type: String,
+		maxlength: 30,
+		'default':"N/A", 
+	},
 });
 
 //save 메소드가 실행되기전에 비밀번호를 암호화
