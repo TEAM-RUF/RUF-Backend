@@ -11,8 +11,7 @@ router.get("/", (req, res) => {
 router.post('/addSurvey', async (req, res) => {
 	try {
 		const surveyData = new SurveyData(req.body);
-		const surveyID = SurveyData.getIdByToken(req.body.token);
-		console.log(surveyID);
+		const surveyID = await SurveyData.getIdByToken(req.body.token);
 		
 		if(!surveyID){
 			// 해당 유저 없음
@@ -24,8 +23,8 @@ router.post('/addSurvey', async (req, res) => {
 				const err = new Error("Internal Server Error");
 				return res.status(500).json({success: false, err});
 			}
-			return res.status(200).json({success: true});
 			console.log(surveyAddStatus);
+			return res.status(200).json({success: true});
 		}else{
 			// 설문조사 업데이트
 			return res.status(400).json({success: false});

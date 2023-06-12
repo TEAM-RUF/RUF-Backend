@@ -1,3 +1,4 @@
+var express = require('express');
 const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
@@ -17,7 +18,7 @@ const surveySchema = mongoose.Schema({
 	},
 	experienceLevel: {
 		type: String,
-		minLength: 50,
+		maxlength: 50,
 	},
 	lastSurvey: {
 		type: Date,
@@ -27,10 +28,10 @@ const surveySchema = mongoose.Schema({
 });
 
 surveySchema.statics.getIdByToken  = async (token) => {
-  	const _id = UserData.getIdByToken(token);
-	console.log(_id);
-	const user = UserData.findById(new ObjectID(_id));
-	
+  	const _id = await UserData.getIdByToken(token);
+	// promise 형태로 넘어오는 _id를 처리 이후 find
+	const user = await UserData.findById(new ObjectID(_id));
+	// await를 사용할 때 에러가 발생하는 경우가 있음 (ide 문제?)
 	return user.surveyID;
 };
 
