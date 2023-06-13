@@ -8,6 +8,24 @@ router.get("/", (req, res) => {
   	res.status(200).send({message : "설문조사 로직"});
 });
 
+router.get("/hasSurvey", async (req, res) => {
+  	try {
+		const token = req.body.token;
+		const surveyData = new SurveyData(req.body);
+		const surveyID = await SurveyData.getIdByToken(token);
+		
+		if(!surveyID)
+			return res.status(500).json({err : "No Such User"});
+		else if(surveyID == "N/A")
+			return res.status(200).json({hasSurvey: false});
+		else
+			return res.status(200).json({hasSurvey: true});
+	}catch (err) {
+		res.status(500).send(err);
+		console.log(err);
+	}
+});
+
 router.post('/addSurvey', async (req, res) => {
 	try {
 		const token = req.body.token;
@@ -31,7 +49,7 @@ router.post('/addSurvey', async (req, res) => {
 			return res.status(200).json({success: true});
 		}else{
 			// 설문조사가 존재하는 상태에서 요청이 들어왔을 때
-			return res.status(400).json({success: false, err : "Survey already exists"});
+			return res.status(500).json({success: false, err : "Survey already exists"});
 		}
 	}catch (err) {
 		res.status(500).send(err);
