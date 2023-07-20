@@ -4,30 +4,59 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 
 const userSchema = mongoose.Schema({
-	email: {
+	email: {				// 이메일, 로그인을 위해 사용
 		type: String,
-		trim: true, //dhsdb 1541 @naver.com 을 dhsdb1541@naver.com로 trim
+		trim: true,
 		unique: true,
+		required: true
 	},
-	name: {
+	password: {				// 비밀번호
 		type: String,
-		maxlength: 50,
+		minLength: 4,
+		required: true
 	},
-	password: {
+	name: {					// 이름
 		type: String,
-		minLength: 5,
+		required: true
 	},
-	surveyID: {
+	phoneNumber: {			// 핸드폰 번호
 		type: String,
-		maxlength: 100,
-		'default':"N/A", 
+		required: true
+	},
+	deviceOS: {				// 디바이스 OS 정보
+		type: String,		// 사용자에게 직접 입력받는 부분이 아니기에
+		required: false		// required 를 false로 설정함
+	},
+	region: {				// 지역정보
+		type: String,
+		required: true
+	},
+	age: {					// 연령정보
+		type: Number,
+		required: true
+	},
+	OAuthInfo: {			// OAuth 인증 종류 (KAKAO, Facebook etc)
+		type: String,		// 추후 OAuth를 적용할 때 사용
+		required: false
+	},
+	isMarketingAgree: {		// 마케팅 수신 동의 여부
+		type: Boolean,
+		required: true
+	},
+	isLogTraceAgree: {		// 사용자 로그 추적 동의 여부
+		type: Boolean,
+		required: true
+	},
+	healthAppAgree: {		// 건강 앱 연동 여부
+		type: Boolean,
+		required: true
 	},
 });
 
 //save 메소드가 실행되기전에 비밀번호를 암호화
 userSchema.pre("save", function (next) {
   let user = this;
-
+ 
   //model 안의 paswsword가 변환될때만 암호화
   if (user.isModified("password")) {
     bcrypt.genSalt(saltRounds, function (err, salt) {
