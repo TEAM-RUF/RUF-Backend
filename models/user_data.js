@@ -48,8 +48,8 @@ const userSchema = mongoose.Schema({
 		required: true
 	},
 	healthAppAgree: {		// 건강 앱 연동 여부
-		type: Boolean,
-		required: true
+		type: Boolean,		// IOS 한정
+		required: false
 	},
 });
 
