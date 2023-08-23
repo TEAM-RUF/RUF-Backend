@@ -26,11 +26,14 @@ mongoose.connect(dbAddress, {
 }).then(() => {
     console.log("MongoDB Connected");
 
-    // gfs setting
-    const conn = mongoose.connection;
-	const bucket = new GridFSBucket(conn.db);
+	const conn = mongoose.connection;
 
-    console.log("GridFS Setting Completed");
+    // GridFSBucket 설정
+    const bucket = new GridFSBucket(conn.db, {
+        bucketName: 'uploads' // GridFS 버킷 이름
+    });
+
+    console.log("GridFSBucket Setting Completed");
 	
 	var indexRouter = require('./routes/index');
 	var authRouter = require('./routes/auth');
@@ -50,7 +53,7 @@ mongoose.connect(dbAddress, {
 	app.use('/', indexRouter);
 	app.use('/auth', authRouter);
 	app.use('/survey', surveyRouter);
-	app.use('/video', videoRouter(gfs));
+	app.use('/video', videoRouter);
 	
 	console.log("Router Setting Completed");
 	
