@@ -11,6 +11,7 @@ require('dotenv').config();
 var indexRouter = require('./routes/index');
 var authRouter = require('./routes/auth');
 var surveyRouter = require('./routes/survey');
+var videoRouter = require('./routes/video');
 
 var app = express();
 
@@ -29,6 +30,7 @@ app.use(cors({
 app.use('/', indexRouter);
 app.use('/auth', authRouter);
 app.use('/survey', surveyRouter);
+app.use('/video', videoRouter);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
