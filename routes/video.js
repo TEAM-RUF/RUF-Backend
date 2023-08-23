@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
-const Grid = require('gridfs-stream');
 const { Readable } = require('stream');
+const { ObjectID } = require('mongodb');
 const mongoose = require('mongoose');
 const VideoModel = require('../models/videoData');
 var router = express.Router();
@@ -9,54 +9,56 @@ var router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-let gfs;
-router.use((req, res, next) => {
-    if (!gfs) {
-        const conn = mongoose.connection;
-        gfs = Grid(conn.db, mongoose.mongo);
-        gfs.collection('uploads');
-    }
-    next();
-});
+module.exports = (gfs) => {
+	
+	router.post('/upload', upload.single('file'), async (req, res) => {
+		try {
+			if (!req.file) {
+				throw new Error('No file uploaded.');
+			}
+console.log("-1");
+			const file = req.file;
+			console.log(gfs.options); // GridFS 스트림 설정 옵션 출력
+			console.log(gfs.dbName); // 사용 중인 데이터베이스 이름 출력
+			console.log(gfs.bucketName); // GridFS 버킷 이름 출력
 
-router.post('/upload', async (req, res) => {
-	try {
-		// GridFS 스트림 생성 및 업로드
-		const writestream = gfs.createWriteStream({
-			filename: req.file.originalname,
-			contentType: req.file.mimetype,
-		});
-
-		const readableStream = new Readable();
-		readableStream.push(req.file.buffer);
-		readableStream.push(null);
-
-		readableStream.pipe(writestream);
-
-		writestream.on('close', async (file) => {
-			// 업로드 된 파일의 메타데이터와 Video 모델을 사용하여 새로운 비디오 생성
-			const video = new VideoModel({
-				title: req.body.title,
-				description: req.body.description,
-				filename: file.filename,
-				contentType: file.contentType,
-				userToken: req.body.userToken,
+console.log("0");
+			const writestream = gfs.createWriteStream({
+				filename: file.originalname,
+				contentType: file.mimetype,
 			});
 
-			await video.save(); // MongoDB에 저장
-
-			return res.status(200).json({
-				sucess: true,
-				message : "File upload success",
+			console.log("1");
+			const readableStream = new Readable();
+			readableStream.push(file.buffer);
+			readableStream.push(null);
+console.log("2");
+			readableStream.pipe(writestream);
+console.log("3");
+			writestream.on('close', async (uploadedFile) => {
+				const video = new VideoModel({
+					title: req.body.title,
+					description: req.body.description,
+					filename: uploadedFile.filename,
+					contentType: uploadedFile.contentType,
+					userToken: req.body.userToken,
+				});
+console.log("4");
+				await video.save();
+console.log("5");
+				return res.status(200).json({
+					success: true,
+					message: 'File upload success',
+				});
 			});
-		});
-	}catch (err) {
-		console.log(err);
-		return res.status(500).json({
-			sucess: false,
-			message : err.message
-		});
-	}
-});
-
-module.exports = router;
+		} catch (err) {
+			console.error(err);
+			return res.status(500).json({
+				success: false,
+				message: err.message,
+			});
+		}
+	});
+	
+	return router;
+}
