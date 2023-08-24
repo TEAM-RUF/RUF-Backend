@@ -10,6 +10,34 @@ var router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
+router.get('/', function(req, res, next) {
+	const filename = req.query.filename;
+	res.render('stream', { filename });
+});
+
+router.get('/stream', async (req, res) => {
+	try {
+	  const conn = mongoose.connection;
+	  const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+		  bucketName: 'uploads'
+	  });
+
+	  const filename = req.query.filename;
+	  const downloadStream = bucket.openDownloadStreamByName(filename);
+
+	  res.setHeader('Content-Type', 'video/mp4');
+	  res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+
+	  downloadStream.pipe(res);
+	} catch (err) {
+		console.error(err);
+		res.status(500).json({
+			success: false,
+			message: err.message,
+		});
+	}
+});
+
 router.post('/upload', upload.single('file'), async (req, res) => {
 	try {
 		if (!req.file) {
