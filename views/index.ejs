@@ -75,11 +75,11 @@
 		}
 		
 		.code-block-title-200 {
-		  color: #A8DF8E;
+		  color: green;
 		}
 		
 		.code-block-title-500 {
-		  color: #BB2525;
+		  color: red;
 		}
 
 		.code-block {
@@ -133,11 +133,7 @@
 		  <p>returning token for subsequent session retention</p>
 		<div class="code-block-title">Request URL</div>
         <pre class="code-block">
-https://gym-bot-backend.run.goorm.site/auth/login?email=judemin2087@naver.com&password=judemin</pre>
-		<div class="code-block-title">Request Parameters</div>
-        <pre class="code-block">
-email=[userEmail]
-email=[userPassword]</pre>
+https://gym-bot-backend.run.goorm.site/auth/login?email=[userEmail]&password=[userPassword]</pre>
 		<div class="code-block-title-200">Response Body</div>
         <pre class="code-block">
 {
@@ -148,27 +144,87 @@ email=[userPassword]</pre>
 		
 		<div id="POST-auth" class="api">
         <h3 class="post">POST /auth/signup</h3>
-		  <p>returning token for subsequent session retention</p>
-		<div class="code-block-title">Request URL</div>
+		  <p>user signup</p>
+		<div class="code-block-title">Request Body</div>
         <pre class="code-block">
-https://gym-bot-backend.run.goorm.site/auth/login?email=judemin2087@naver.com&password=judemin</pre>
-		<div class="code-block-title">Request Parameters</div>
-        <pre class="code-block">
-email=[userEmail]
-email=[userPassword]</pre>
+{
+  "token" : -1,
+  "email": "judemin2087@naver.com",
+  "password" : "12345678",
+  "name" : "민상연"
+  "phoneNumber" : "010-1234-5678",
+  "region" : "서울",
+  "age" : "20",
+  "OAuthInfo" : "KAKAO",
+  "isMarketingAgree" : true,
+  "isLogTraceAgree" : true,
+}</pre>
 		<div class="code-block-title-200">Response Body</div>
         <pre class="code-block">
 {
-    "loginSuccess": true,
-    "userToken": [userToken]
+    "success": true
+}</pre>
+		<div class="code-block-title-500">Response Body (Multiple Email)</div>
+        <pre class="code-block">
+{
+    "index": 0,
+    "code": 11000,
+    "keyPattern": {
+        "email": 1
+    },
+    "keyValue": {
+        "email": "judemin2087@naver.com"
+    }
 }</pre>
       </div>
       
-		
     </div>
 	<!--------------------------------->
     <div id="video-route" class="hidden">
-      <h2>Video Routes</h2>
+      <h2>Video Routes : Video-related requests</h2>
+		
+		<div id="GET-auth" class="api">
+        <h3 class="get">GET /video</h3>
+		  <p>rendering video stored in the database to a server page</p>
+		<div class="code-block-title">Request URL</div>
+        <pre class="code-block">
+https://gym-bot-backend.run.goorm.site/video?filename=[filename]</pre>
+		<div class="code-block-title-200">Response</div>
+        <p>Video Rendering Page</p>
+      </div>
+		
+		<div id="GET-auth" class="api">
+        <h3 class="get">GET /video/stream</h3>
+		<p>send video stream of GridFSBucket DownloadStream</p>
+		<div class="code-block-title">Request URL</div>
+        <pre class="code-block">
+https://gym-bot-backend.run.goorm.site/video/stream?filename=[filename]</pre>
+		<div class="code-block-title-200">Response</div>
+        <p>GridFSBucket Chuncked DownloadStream</p>
+      </div>
+		
+		<div id="POST-auth" class="api">
+        <h3 class="post">POST /video/upload</h3>
+		  <p>upload max 2GB, mp4 video file</p>
+		<div class="code-block-title">Request Body</div>
+        <pre class="code-block">
+{
+  "file" : [video file],
+  "title": "test",
+  "description" : "test description",
+  "name" : "민상연",
+  "userToken" : [userToken],
+}</pre>
+		<div class="code-block-title">Request Header</div>
+        <pre class="code-block">
+Content-Type=multipart/form-data;</pre>
+		<div class="code-block-title-200">Response Body</div>
+        <pre class="code-block">
+{
+    "success": true,
+    "message": "File upload success"
+}</pre>
+		</div>
 		
     </div>
 	  <!--------------------------------->
