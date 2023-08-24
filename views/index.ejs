@@ -8,9 +8,8 @@
 		.post { color: orange; }
 		.put { color: blue; }
 		.delete { color: red; }
-		.hidden { display: none; } /* 숨김 처리 스타일 */
+		.hidden { display: none; }
 
-		/* 인스타그램 스타일 적용 */
 		body {
 		  font-family: Arial, sans-serif;
 		  background-color: #fafafa;
@@ -74,6 +73,14 @@
 		.api h3 {
 		  margin-bottom: 10px;
 		}
+		
+		.code-block-title-200 {
+		  color: #A8DF8E;
+		}
+		
+		.code-block-title-500 {
+		  color: #BB2525;
+		}
 
 		.code-block {
 		  background-color: #f0f0f0;
@@ -112,14 +119,69 @@
     <p>RUF 서비스 제공을 위한 백엔드 서버입니다</p>
     
     <div>
+	  <button onclick="toggleRoute('auth')">/auth</button>
       <button onclick="toggleRoute('video')">/video</button>
-      <button onclick="toggleRoute('auth')">/auth</button>
     </div>
     
+	  
+	 <!--------------------------------->
+    <div id="auth-route" class="hidden">
+      <h2>Auth Routes : Account-related requests</h2>
+		
+      <div id="GET-auth" class="api">
+        <h3 class="get">GET /auth/login</h3>
+		  <p>returning token for subsequent session retention</p>
+		<div class="code-block-title">Request URL</div>
+        <pre class="code-block">
+https://gym-bot-backend.run.goorm.site/auth/login?email=judemin2087@naver.com&password=judemin</pre>
+		<div class="code-block-title">Request Parameters</div>
+        <pre class="code-block">
+email=[userEmail]
+email=[userPassword]</pre>
+		<div class="code-block-title-200">Response Body</div>
+        <pre class="code-block">
+{
+    "loginSuccess": true,
+    "userToken": [userToken]
+}</pre>
+      </div>
+		
+		<div id="POST-auth" class="api">
+        <h3 class="post">POST /auth/signup</h3>
+		  <p>returning token for subsequent session retention</p>
+		<div class="code-block-title">Request URL</div>
+        <pre class="code-block">
+https://gym-bot-backend.run.goorm.site/auth/login?email=judemin2087@naver.com&password=judemin</pre>
+		<div class="code-block-title">Request Parameters</div>
+        <pre class="code-block">
+email=[userEmail]
+email=[userPassword]</pre>
+		<div class="code-block-title-200">Response Body</div>
+        <pre class="code-block">
+{
+    "loginSuccess": true,
+    "userToken": [userToken]
+}</pre>
+      </div>
+      
+		
+    </div>
+	<!--------------------------------->
     <div id="video-route" class="hidden">
       <h2>Video Routes</h2>
-      
-      <div id="GET-video" class="api">
+		
+    </div>
+	  <!--------------------------------->
+  </body>
+</html>
+
+
+
+
+
+<!--
+
+<div id="GET-video" class="api">
         <h3 class="get">GET /video</h3>
         <pre class="code-block">
 Request Body: None
@@ -158,50 +220,5 @@ Parameters: video ID
 Headers: None
         </pre>
       </div>
-    </div>
-    
-    <div id="auth-route" class="hidden">
-      <h2>Auth Routes</h2>
-      
-      <div id="GET-auth" class="api">
-        <h3 class="get">GET /auth</h3>
-        <pre class="code-block">
-Request Body: None
-Response Body: Authentication info
-Parameters: None
-Headers: None
-        </pre>
-      </div>
-      
-      <div id="POST-auth" class="api">
-        <h3 class="post">POST /auth</h3>
-        <pre class="code-block">
-Request Body: User credentials
-Response Body: Authenticated user
-Parameters: None
-Headers: None
-        </pre>
-      </div>
-      
-      <div id="PUT-auth" class="api">
-        <h3 class="put">PUT /auth/:id</h3>
-        <pre class="code-block">
-Request Body: Updated user data
-Response Body: Updated user
-Parameters: user ID
-Headers: None
-        </pre>
-      </div>
-      
-      <div id="DELETE-auth" class="api">
-        <h3 class="delete">DELETE /auth/:id</h3>
-        <pre class="code-block">
-Request Body: None
-Response Body: Deleted user
-Parameters: user ID
-Headers: None
-        </pre>
-      </div>
-    </div>
-  </body>
-</html>
+
+>
