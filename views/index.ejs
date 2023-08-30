@@ -1,152 +1,170 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>RUF</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <style>
-		.get { color: green; }
-		.post { color: orange; }
-		.put { color: blue; }
-		.delete { color: red; }
-		.hidden { display: none; }
+
+<head>
+	<title>RUF</title>
+	<link rel='stylesheet' href='/stylesheets/style.css' />
+	<style>
+		.get {
+			color: green;
+		}
+
+		.post {
+			color: orange;
+		}
+
+		.put {
+			color: blue;
+		}
+
+		.delete {
+			color: red;
+		}
+
+		.hidden {
+			display: none;
+		}
 
 		body {
-		  font-family: Arial, sans-serif;
-		  background-color: #fafafa;
+			font-family: Arial, sans-serif;
+			background-color: #fafafa;
 		}
 
 		.container {
-		  max-width: 800px;
-		  margin: 0 auto;
-		  padding: 20px;
-		  background-color: white;
-		  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-		  border-radius: 10px;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background-color: white;
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+			border-radius: 10px;
 		}
 
-		h1, h2, h3 {
-		  color: #262626;
+		h1,
+		h2,
+		h3 {
+			color: #262626;
 		}
 
 		h1 {
-		  font-size: 36px;
-		  margin-bottom: 10px;
+			font-size: 36px;
+			margin-bottom: 10px;
 		}
 
 		h2 {
-		  font-size: 24px;
-		  margin-top: 20px;
-		  margin-bottom: 10px;
+			font-size: 24px;
+			margin-top: 20px;
+			margin-bottom: 10px;
 		}
 
 		h3 {
-		  font-size: 20px;
-		  margin-top: 15px;
-		  margin-bottom: 5px;
+			font-size: 20px;
+			margin-top: 15px;
+			margin-bottom: 5px;
 		}
 
 		p {
-		  color: #999999;
+			color: #999999;
 		}
 
 		button {
-		  background-color: #0095f6;
-		  color: white;
-		  border: none;
-		  padding: 10px 20px;
-		  border-radius: 5px;
-		  cursor: pointer;
+			background-color: #0095f6;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 5px;
+			cursor: pointer;
 		}
 
 		button:hover {
-		  background-color: #0085e6;
+			background-color: #0085e6;
 		}
 
 		.api {
-		  margin-top: 20px;
-		  padding: 10px;
-		  border: 1px solid #e0e0e0;
-		  border-radius: 5px;
-		  background-color: #f9f9f9;
+			margin-top: 20px;
+			padding: 10px;
+			border: 1px solid #e0e0e0;
+			border-radius: 5px;
+			background-color: #f9f9f9;
 		}
 
 		.api h3 {
-		  margin-bottom: 10px;
+			margin-bottom: 10px;
 		}
-		
+
 		.code-block-title-200 {
-		  color: green;
+			color: green;
 		}
-		
+
 		.code-block-title-500 {
-		  color: red;
+			color: red;
 		}
 
 		.code-block {
-		  background-color: #f0f0f0;
-		  padding: 10px;
-		  border-radius: 5px;
-		  white-space: pre-wrap;
+			background-color: #f0f0f0;
+			padding: 10px;
+			border-radius: 5px;
+			white-space: pre-wrap;
 		}
-    </style>
-    <script>
-      let currentRoute = null;
-      
-      function toggleRoute(route) {
-        if (currentRoute === route) {
-          const elem = document.getElementById(`${route}-route`);
-          elem.classList.add('hidden');
-          currentRoute = null;
-        } else {
-          const routes = ['video', 'auth'];
-          
-          routes.forEach(r => {
-            const elem = document.getElementById(`${r}-route`);
-            if (r === route) {
-              elem.classList.remove('hidden');
-            } else {
-              elem.classList.add('hidden');
-            }
-          });
-          
-          currentRoute = route;
-        }
-      }
-    </script>
-  </head>
-  <body>
-    <h1>Hello, RUF!</h1>
-    <p>RUF 서비스 제공을 위한 백엔드 서버입니다</p>
-    
-    <div>
-	  <button onclick="toggleRoute('auth')">/auth</button>
-      <button onclick="toggleRoute('video')">/video</button>
-    </div>
-    
-	  
-	 <!--------------------------------->
-    <div id="auth-route" class="hidden">
-      <h2>Auth Routes : Account-related requests</h2>
-		
-      <div id="GET-auth" class="api">
-        <h3 class="get">GET /auth/login</h3>
-		  <p>returning token for subsequent session retention</p>
-		<div class="code-block-title">Request URL</div>
-        <pre class="code-block">
+	</style>
+	<script>
+		let currentRoute = null;
+
+		function toggleRoute(route) {
+			if (currentRoute === route) {
+				const elem = document.getElementById(`${route}-route`);
+				elem.classList.add('hidden');
+				currentRoute = null;
+			} else {
+				const routes = ['video', 'auth'];
+
+				routes.forEach(r => {
+					const elem = document.getElementById(`${r}-route`);
+					if (r === route) {
+						elem.classList.remove('hidden');
+					} else {
+						elem.classList.add('hidden');
+					}
+				});
+
+				currentRoute = route;
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<h1>Hello, RUF!</h1>
+	<p>RUF 서비스 제공을 위한 백엔드 서버입니다</p>
+
+	<div>
+		<button onclick="toggleRoute('auth')">/auth</button>
+		<button onclick="toggleRoute('video')">/video</button>
+	</div>
+
+
+	<!--------------------------------->
+	<div id="auth-route" class="hidden">
+		<h2>Auth Routes : Account-related requests</h2>
+
+		<div id="GET-auth" class="api">
+			<h3 class="get">GET /auth/login</h3>
+			<p>returning token for subsequent session retention</p>
+			<div class="code-block-title">Request URL</div>
+			<pre class="code-block">
 https://gym-bot-backend.run.goorm.site/auth/login?email=[userEmail]&password=[userPassword]</pre>
-		<div class="code-block-title-200">Response Body</div>
-        <pre class="code-block">
+			<div class="code-block-title-200">Response Body</div>
+			<pre class="code-block">
 {
     "loginSuccess": true,
     "userToken": [userToken]
 }</pre>
-      </div>
-		
+		</div>
+
 		<div id="POST-auth" class="api">
-        <h3 class="post">POST /auth/signup</h3>
-		  <p>user signup</p>
-		<div class="code-block-title">Request Body</div>
-        <pre class="code-block">
+			<h3 class="post">POST /auth/signup</h3>
+			<p>user signup</p>
+			<div class="code-block-title">Request Body</div>
+			<pre class="code-block">
 {
   "token" : -1,
   "email": "judemin2087@naver.com",
@@ -159,13 +177,13 @@ https://gym-bot-backend.run.goorm.site/auth/login?email=[userEmail]&password=[us
   "isMarketingAgree" : true,
   "isLogTraceAgree" : true,
 }</pre>
-		<div class="code-block-title-200">Response Body</div>
-        <pre class="code-block">
+			<div class="code-block-title-200">Response Body</div>
+			<pre class="code-block">
 {
     "success": true
 }</pre>
-		<div class="code-block-title-500">Response Body (Multiple Email)</div>
-        <pre class="code-block">
+			<div class="code-block-title-500">Response Body (Multiple Email)</div>
+			<pre class="code-block">
 {
     "index": 0,
     "code": 11000,
@@ -176,38 +194,38 @@ https://gym-bot-backend.run.goorm.site/auth/login?email=[userEmail]&password=[us
         "email": "judemin2087@naver.com"
     }
 }</pre>
-      </div>
-      
-    </div>
+		</div>
+
+	</div>
 	<!--------------------------------->
-    <div id="video-route" class="hidden">
-      <h2>Video Routes : Video-related requests</h2>
-		
+	<div id="video-route" class="hidden">
+		<h2>Video Routes : Video-related requests</h2>
+
 		<div id="GET-auth" class="api">
-        <h3 class="get">GET /video</h3>
-		  <p>rendering video stored in the database to a server page</p>
-		<div class="code-block-title">Request URL</div>
-        <pre class="code-block">
+			<h3 class="get">GET /video</h3>
+			<p>rendering video stored in the database to a server page</p>
+			<div class="code-block-title">Request URL</div>
+			<pre class="code-block">
 https://gym-bot-backend.run.goorm.site/video?filename=[filename]</pre>
-		<div class="code-block-title-200">Response</div>
-        <p>Video Rendering Page</p>
-      </div>
-		
+			<div class="code-block-title-200">Response</div>
+			<p>Video Rendering Page</p>
+		</div>
+
 		<div id="GET-auth" class="api">
-        <h3 class="get">GET /video/stream</h3>
-		<p>send video stream of GridFSBucket DownloadStream</p>
-		<div class="code-block-title">Request URL</div>
-        <pre class="code-block">
+			<h3 class="get">GET /video/stream</h3>
+			<p>send video stream of GridFSBucket DownloadStream</p>
+			<div class="code-block-title">Request URL</div>
+			<pre class="code-block">
 https://gym-bot-backend.run.goorm.site/video/stream?filename=[filename]</pre>
-		<div class="code-block-title-200">Response</div>
-        <p>GridFSBucket Chuncked DownloadStream</p>
-      </div>
-		
+			<div class="code-block-title-200">Response</div>
+			<p>GridFSBucket Chuncked DownloadStream</p>
+		</div>
+
 		<div id="POST-auth" class="api">
-        <h3 class="post">POST /video/upload</h3>
-		  <p>upload max 2GB, mp4 video file</p>
-		<div class="code-block-title">Request Body</div>
-        <pre class="code-block">
+			<h3 class="post">POST /video/upload</h3>
+			<p>upload max 2GB, mp4 video file</p>
+			<div class="code-block-title">Request Body</div>
+			<pre class="code-block">
 {
   "file" : [video file],
   "title": "test",
@@ -215,18 +233,33 @@ https://gym-bot-backend.run.goorm.site/video/stream?filename=[filename]</pre>
   "name" : "민상연",
   "userToken" : [userToken],
 }</pre>
-		<div class="code-block-title">Request Header</div>
-        <pre class="code-block">
+			<div class="code-block-title">Request Header</div>
+			<pre class="code-block">
 Content-Type=multipart/form-data;</pre>
-		<div class="code-block-title-200">Response Body</div>
-        <pre class="code-block">
+			<div class="code-block-title-200">Response Body</div>
+			<pre class="code-block">
 {
     "success": true,
     "message": "File upload success"
 }</pre>
 		</div>
-		
-    </div>
-	  <!--------------------------------->
-  </body>
+
+		<div id="DELETE-auth" class="api">
+			<h3 class="delete">DELETE /video/delete</h3>
+			<p>Delete all files and chunks of GridFSBucket through filename</p>
+			<div class="code-block-title">Request URL</div>
+			<pre class="code-block">
+localhost:3030/video/delete?filename=[filename]</pre>
+			<div class="code-block-title-200">Response Body</div>
+			<pre class="code-block">
+{
+	"success": true,
+	"message": "Video deleted successfully"
+}</pre>
+		</div>
+
+	</div>
+	<!--------------------------------->
+</body>
+
 </html>
