@@ -19,26 +19,27 @@ const dbAddress = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_
 
 let Attachment; // GridFS Bucket variable
 mongoose.connect(dbAddress, {
-    // useNewUrlPaser: true,
-    // useUnifiedTofology: true,
-    // useCreateIndex: true,
-    // useFindAndModify: false,
+	// useNewUrlPaser: true,
+	// useUnifiedTofology: true,
+	// useCreateIndex: true,
+	// useFindAndModify: false,
 }).then(() => {
-    console.log("MongoDB Connected");
+	console.log("MongoDB Connected");
 
 	const conn = mongoose.connection;
 
-    // GridFSBucket 설정
-    const bucket = new GridFSBucket(conn.db, {
-        bucketName: 'uploads' // GridFS 버킷 이름
-    });
+	// GridFSBucket 설정
+	const bucket = new GridFSBucket(conn.db, {
+		bucketName: 'uploads' // GridFS 버킷 이름
+	});
 
-    console.log("GridFSBucket Setting Completed");
-	
+	console.log("GridFSBucket Setting Completed");
+
 	var indexRouter = require('./routes/index');
 	var authRouter = require('./routes/auth');
 	var surveyRouter = require('./routes/survey');
 	const videoRouter = require('./routes/video');
+	const imageProcRouter = require('./routes/image_proc');
 
 	// Body-parser 미들웨어 등록
 	app.use(logger('dev'));
@@ -54,36 +55,37 @@ mongoose.connect(dbAddress, {
 	app.use('/auth', authRouter);
 	app.use('/survey', surveyRouter);
 	app.use('/video', videoRouter);
-	
+	app.use('/imageProc', imageProcRouter);
+
 	console.log("Router Setting Completed");
-	
-	app.use(function(req, res, next) {
-	  var err = new Error('Not Found');
-	  err.status = 404;
-	  next(err);
+
+	app.use(function (req, res, next) {
+		var err = new Error('Not Found');
+		err.status = 404;
+		next(err);
 	});
 
 	// error handler
-	app.use(function(err, req, res, next) {
-	  // set locals, only providing error in development
-	  res.locals.message = err.message;
-	  res.locals.error = req.app.get('env') === 'development' ? err : {};
+	app.use(function (err, req, res, next) {
+		// set locals, only providing error in development
+		res.locals.message = err.message;
+		res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-	  // render the error page
-	  res.status(err.status || 500);
-	  res.render('error');
+		// render the error page
+		res.status(err.status || 500);
+		res.render('error');
 	});
-	
+
 	console.log("Err Handler Setting Completed");
-	
+
 	var port = 3030;
 	app.listen(
-		process.env.PORT || port, 
+		process.env.PORT || port,
 		() => console.log('RUF Server is Listening : ' + port)
 	);
-	
+
 }).catch((err) => {
-    console.log(err);
+	console.log(err);
 });
 
 module.exports = app;
