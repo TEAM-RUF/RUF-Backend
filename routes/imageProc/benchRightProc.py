@@ -12,13 +12,11 @@ mp_pose = mp.solutions.pose
 BENCH_PRESS_ANGLE_DOWN = 60
 BENCH_PRESS_ANGLE_UP = 150 
 
-# 이미지 데이터를 Base64로 인코딩된 문자열로 수신
-image_base64 = sys.argv[1]
+# 이미지 파일 경로를 인자로 받음
+image_file_path = sys.argv[1]
 
-# Base64 문자열을 이미지로 디코딩
-image_data = base64.b64decode(image_base64)
-nparr = np.frombuffer(image_data, np.uint8)
-frame = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+# 이미지를 OpenCV로 읽어옴
+frame = cv2.imread(image_file_path)
 
 # Squat Count를 인자로 받음
 resCount = int(sys.argv[2])

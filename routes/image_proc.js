@@ -1,11 +1,21 @@
 var express = require('express');
+const multer = require('multer');
 var router = express.Router();
 const fs = require('fs');
 const path = require('path');
 const { PythonShell } = require("python-shell");
+const crypto = require('crypto');
+
+function generateRandomToken() {
+    const randomBytes = crypto.randomBytes(32);
+    return randomBytes.toString('hex');
+}
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 router.get("/", (req, res) => {
-    const filePath = path.join(__dirname, '/image_processing/squatRight.py');
+    const filePath = path.join(__dirname, '/imageProc/squatRight.py');
 
     const options = {
         mode: 'text',
@@ -26,17 +36,25 @@ router.get("/", (req, res) => {
     });
 });
 
-app.post("/upload", upload.single("image"), (req, res) => {
-    const imageBuffer = req.file.buffer
-    let count = req.body.count;
+router.post("/upload", upload.single("image"), (req, res) => {
+    const imageToken = generateRandomToken();
+    const bufferPath = path.join(__dirname, '/imageBuffer/', imageToken, '.jpg');
 
-    const filePath = path.join(__dirname, '/image_processing/benchRightProc.py');
+    let count = req.body.count;
+    const imageBuffer = req.file.buffer
+
+    fs.writeFileSync(bufferPath, imageBuffer);
+
+    console.log(bufferPath);
+    console.log(count);
+
+    const filePath = path.join(__dirname, '/imageProc/benchRightProc.py');
     const options = {
         mode: 'text',
         pythonPath: '',
         pythonOptions: ['-u'],
         scriptPath: '',
-        args: [imageBuffer.toString("base64"), count.toString()]
+        args: [bufferPath, count.toString()]
     };
 
     PythonShell.run(filePath, options, (err, result) => {
@@ -53,6 +71,7 @@ app.post("/upload", upload.single("image"), (req, res) => {
 
             res.json({ resCount, processedImageBase64 });
         }
+        fs.unlinkSync(imageFilePath);
     });
 });
 
