@@ -10,17 +10,19 @@ mp_pose = mp.solutions.pose
 
 # 벤치 프레스 카운팅 기준 각도
 BENCH_PRESS_ANGLE_DOWN = 60
-BENCH_PRESS_ANGLE_UP = 150 
+BENCH_PRESS_ANGLE_UP = 140
+
+# Squat Count를 인자로 받음
+resCount = int(sys.argv[1])
+
+# Stage를 인자로 받음
+stage = sys.argv[2]
 
 # 이미지 파일 경로를 인자로 받음
-image_file_path = sys.argv[1]
+image_file_path = sys.argv[3]
 
 # 이미지를 OpenCV로 읽어옴
 frame = cv2.imread(image_file_path)
-
-# Squat Count를 인자로 받음
-resCount = int(sys.argv[2])
-
 
 def calculate_angle(a, b, c):
     a = np.array(a)
@@ -36,7 +38,6 @@ def calculate_angle(a, b, c):
     return angle
 
 counter = 0
-stage = "up"
 
 with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as pose:
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -86,17 +87,19 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
     # 화면에 횟수 표시
     cv2.putText(image, benchpress_text,
         (text_x, text_y), font, text_scale, (255, 255, 255), text_thickness, cv2.LINE_AA)
+    
+    ret, processed_image = cv2.imencode(".jpg", image)
+    
+    # 이미지를 Base64로 인코딩
+    ret, processed_image = cv2.imencode(".jpg", image)
+    processed_image_base64 = base64.b64encode(processed_image.tobytes()).decode('utf-8')
 
+    response_data = {
+        "res_count": resCount + counter,
+        "res_stage" : stage,
+        "processed_image": processed_image_base64,
+    }
 
-# 이미지를 Base64로 인코딩
-ret, processed_image = cv2.imencode(".jpg", frame)
-processed_image_base64 = base64.b64encode(processed_image.tobytes()).decode('utf-8')
+    response_json = json.dumps(response_data)
 
-response_data = {
-    "res_count": resCount + counter,  # 처리된 Squat Count를 반환
-    "processed_image": processed_image_base64  # 이미지를 Base64로 변환하여 반환
-}
-
-response_json = json.dumps(response_data)
-
-print(response_json)
+    print(response_json)
