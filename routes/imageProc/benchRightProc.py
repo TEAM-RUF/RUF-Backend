@@ -87,8 +87,6 @@ with mp_pose.Pose(min_detection_confidence=0.5, min_tracking_confidence=0.5) as 
     cv2.putText(image, benchpress_text,
         (text_x, text_y), font, text_scale, (255, 255, 255), text_thickness, cv2.LINE_AA)
 
-    cv2.imshow('Bench Press Counter Feed', image)
-
 
 # 이미지를 Base64로 인코딩
 ret, processed_image = cv2.imencode(".jpg", frame)
@@ -99,4 +97,6 @@ response_data = {
     "processed_image": processed_image_base64  # 이미지를 Base64로 변환하여 반환
 }
 
-print(json.dumps(response_data))
+response_json = json.dumps(response_data)
+
+print(response_json)
