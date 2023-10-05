@@ -7,7 +7,7 @@ const { PythonShell } = require("python-shell");
 const crypto = require('crypto');
 
 function generateRandomToken() {
-    const randomBytes = crypto.randomBytes(32);
+    const randomBytes = crypto.randomBytes(10);
     return randomBytes.toString('hex');
 }
 
@@ -15,7 +15,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.get("/", (req, res) => {
-    const filePath = path.join(__dirname, '/imageProc/squatRight.py');
+    const filePath = path.join(__dirname, '/imageProc/benchRight.py');
 
     const options = {
         mode: 'text',
@@ -36,17 +36,17 @@ router.get("/", (req, res) => {
     });
 });
 
-router.post("/upload", upload.single("image"), (req, res) => {
+router.post("/procSingle", upload.single("image"), (req, res) => {
     const imageToken = generateRandomToken();
-    const bufferPath = path.join(__dirname, '/imageBuffer/', imageToken, '.jpg');
+    const bufferPath = path.join(__dirname, '/imageBuffer/', imageToken + '.jpg');
 
     let count = req.body.count;
+    let stage = req.body.stage;
     const imageBuffer = req.file.buffer
 
-    fs.writeFileSync(bufferPath, imageBuffer);
+    // console.log(imageToken + '.jpg');
 
-    console.log(bufferPath);
-    console.log(count);
+    fs.writeFileSync(bufferPath, imageBuffer);
 
     const filePath = path.join(__dirname, '/imageProc/benchRightProc.py');
     const options = {
@@ -54,24 +54,33 @@ router.post("/upload", upload.single("image"), (req, res) => {
         pythonPath: '',
         pythonOptions: ['-u'],
         scriptPath: '',
-        args: [bufferPath, count.toString()]
+        args: [count.toString(), stage, bufferPath]
     };
 
-    PythonShell.run(filePath, options, (err, result) => {
+    const pythonShell = new PythonShell(filePath, options);
+    let pythonResponse;
+    pythonShell.on('message', (message) => {
+        pythonResponse = JSON.parse(message);
+    });
+
+    pythonShell.end(async (err, result) => {
         if (err) {
             console.error(err);
             res.status(500).send('An error occurred while running Python script.');
         } else {
-            console.log('Python script executed successfully.');
-            const pythonResponse = JSON.parse(result);
+            // console.log('Python script executed successfully.');
+
+            // console.log(pythonResponse);
 
             resCount = pythonResponse.res_count;
-
+            resStage = pythonResponse.res_stage;
             const processedImageBase64 = pythonResponse.processed_image;
 
-            res.json({ resCount, processedImageBase64 });
+            console.log(resCount + " " + resStage);
+            res.json({ resCount, resStage, processedImageBase64 });
+
+            fs.unlinkSync(bufferPath);
         }
-        fs.unlinkSync(imageFilePath);
     });
 });
 
