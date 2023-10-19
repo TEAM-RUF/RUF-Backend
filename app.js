@@ -40,7 +40,6 @@ mongoose.connect(dbAddress, {
 	var surveyRouter = require('./routes/survey');
 	const videoRouter = require('./routes/video');
 	const imageProcRouter = require('./routes/image_proc');
-	const procJSRouter = require('./routes/procJS');
 
 	// Body-parser 미들웨어 등록
 	app.use(logger('dev'));
@@ -57,7 +56,6 @@ mongoose.connect(dbAddress, {
 	app.use('/survey', surveyRouter);
 	app.use('/video', videoRouter);
 	app.use('/imageProc', imageProcRouter);
-	app.use('/procJS', procJSRouter);
 
 	console.log("Router Setting Completed");
 

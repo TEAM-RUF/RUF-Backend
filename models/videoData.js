@@ -2,15 +2,21 @@ const mongoose = require('mongoose');
 
 
 const videoSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    filename: String,
+    filename: String,   // 동영상 이름
     contentType: String,
-	userToken: {
-		type: String,
-		// required: true
-	},
+    workout: String,    // 운동 종류
+    set: Number,        // 해당 세트
+    userToken: {
+        type: String,
+        // required: true
+    },
+    createdAt: {
+        type: Date,
+    },
+    expiredAt: {
+        type: Date,
+        expires: 0,
+    }
 });
-
 
 module.exports = mongoose.model('Video', videoSchema);

@@ -60,13 +60,18 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 		readableStream.pipe(uploadStream);
 
+		const dtNow = new Date();
+		const dtExp = new Date(Date.now() + 10);
+
 		uploadStream.on('finish', async (uploadedFile) => {
 			const video = new VideoModel({
-				title: req.body.title,
-				description: req.body.description,
 				filename: uploadedFile.filename,
 				contentType: uploadedFile.contentType,
+				workout: req.body.workout,
+				set: req.body.set,
 				userToken: req.body.userToken,
+				createdAt: dtNow,
+				expiredAt: dtExp,
 			});
 
 			await video.save();
