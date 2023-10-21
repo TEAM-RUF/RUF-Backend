@@ -5,7 +5,6 @@ const { ObjectID } = require('mongodb');
 const mongoose = require('mongoose');
 const { GridFSBucket } = require('mongodb');
 const VideoModel = require('../models/videoData');
-const VideosChunk = require('../models/videosChunk');
 var router = express.Router();
 
 const storage = multer.memoryStorage();
