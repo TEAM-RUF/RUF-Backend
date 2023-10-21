@@ -39,7 +39,6 @@ router.get('/stream', async (req, res) => {
 });
 
 router.post('/upload', upload.single('file'), async (req, res) => {
-
 	try {
 		if (!req.file) {
 			throw new Error('No file uploaded.');

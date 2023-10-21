@@ -17,7 +17,6 @@ app.set('view engine', 'ejs');
 // DB connection
 const dbAddress = "mongodb+srv://" + process.env.DB_USER + ":" + process.env.DB_PASS + "@" + process.env.DB_HOST;
 
-let Attachment; // GridFS Bucket variable
 mongoose.connect(dbAddress, {
 	// useNewUrlPaser: true,
 	// useUnifiedTofology: true,
@@ -47,10 +46,17 @@ mongoose.connect(dbAddress, {
 	app.use(bodyParser.urlencoded({ extended: false }));
 	app.use(cookieParser());
 	app.use(express.static(path.join(__dirname, 'public')));
-	app.use(cors({
-		origin: '*'
-	}));
 
+	// 배포시 CORS 조정 필요
+	const corsOptions = {
+		origin: "http://localhost:3000",
+		credentials: true,
+	};
+
+	app.use(cors(corsOptions));
+
+
+	// 라우팅 설정
 	app.use('/', indexRouter);
 	app.use('/auth', authRouter);
 	app.use('/survey', surveyRouter);
