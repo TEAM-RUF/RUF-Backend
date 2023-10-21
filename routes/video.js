@@ -39,6 +39,7 @@ router.get('/stream', async (req, res) => {
 });
 
 router.post('/upload', upload.single('file'), async (req, res) => {
+
 	try {
 		if (!req.file) {
 			throw new Error('No file uploaded.');
@@ -48,10 +49,11 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 		const conn = mongoose.connection;
 		const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
-			bucketName: 'uploads'
+			bucketName: 'videos'
 		});
+
 		const uploadStream = bucket.openUploadStream(file.originalname, {
-			contentType: file.mimetype
+			contentType: file.mimetype,
 		});
 
 		const readableStream = new Readable();
@@ -60,9 +62,6 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 		readableStream.pipe(uploadStream);
 
-		const dtNow = new Date();
-		const dtExp = new Date(Date.now() + 10);
-
 		uploadStream.on('finish', async (uploadedFile) => {
 			const video = new VideoModel({
 				filename: uploadedFile.filename,
@@ -70,8 +69,6 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 				workout: req.body.workout,
 				set: req.body.set,
 				userToken: req.body.userToken,
-				createdAt: dtNow,
-				expiredAt: dtExp,
 			});
 
 			await video.save();

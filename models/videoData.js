@@ -10,13 +10,12 @@ const videoSchema = new mongoose.Schema({
         type: String,
         // required: true
     },
-    createdAt: {
+    uploadDate: {
         type: Date,
+        default: Date.now,
+        required: false,
+        expires: process.env.EXPIRE_AFTER_SECOND,
     },
-    expiredAt: {
-        type: Date,
-        expires: 0,
-    }
 });
 
 module.exports = mongoose.model('Video', videoSchema);
