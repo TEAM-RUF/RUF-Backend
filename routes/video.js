@@ -19,7 +19,7 @@ router.get('/stream', async (req, res) => {
 	try {
 		const conn = mongoose.connection;
 		const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
-			bucketName: 'uploads'
+			bucketName: 'videos'
 		});
 
 		const filename = req.query.filename;
@@ -64,7 +64,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 		uploadStream.on('finish', async (uploadedFile) => {
 			// indexInformation을 통해 index 유뮤 확인과 expiredAfterSeconds 추가
 			indexInfo = await conn.db.collection('videos.files').indexInformation();
-			if (!indexInfo['uploadDate']) {
+			if (!indexInfo['uploadDate_1']) {
 				await conn.db.collection('videos.files').createIndex(
 					{ 'uploadDate': 1 },
 					{ expireAfterSeconds: Number(process.env.EXPIRE_AFTER_SECOND) }
@@ -82,7 +82,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 			);
 
 			indexInfo = await conn.db.collection('videos.chunks').indexInformation();
-			if (!indexInfo['uploadDate']) {
+			if (!indexInfo['uploadDate_1']) {
 				await conn.db.collection('videos.chunks').createIndex(
 					{ 'uploadDate': 1 },
 					{ expireAfterSeconds: Number(process.env.EXPIRE_AFTER_SECOND) }
