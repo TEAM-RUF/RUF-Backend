@@ -3,8 +3,9 @@ const multer = require('multer');
 const { Readable } = require('stream');
 const { ObjectID } = require('mongodb');
 const mongoose = require('mongoose');
-const VideoModel = require('../models/videoData');
 const { GridFSBucket } = require('mongodb');
+const VideoModel = require('../models/videoData');
+const VideosChunk = require('../models/videosChunk');
 var router = express.Router();
 
 const storage = multer.memoryStorage();
@@ -63,6 +64,43 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 		readableStream.pipe(uploadStream);
 
 		uploadStream.on('finish', async (uploadedFile) => {
+			// indexInformation을 통해 index 유뮤 확인과 expiredAfterSeconds 추가
+			conn.db.collection('videos.files').indexInformation({ full: true }, (err, indexInformation) => {
+				if (err) {
+					console.error(err);
+				} else {
+					if (!indexInformation['uploadDate']) {
+						conn.db.collection('videos.chunks').createIndex(
+							{ 'uploadDate': 1 },
+							{ expireAfterSeconds: process.env.EXPIRE_AFTER_SECOND }
+						);
+					}
+				}
+			});
+
+			// videos.chunks에서 updateMany와 index 업데이트
+			conn.db.collection('videos.chunks').updateMany(
+				{ files_id: uploadedFile._id },
+				{
+					$set: {
+						uploadDate: new Date(),
+					},
+				}
+			);
+
+			conn.db.collection('videos.chunks').indexInformation({ full: true }, (err, indexInformation) => {
+				if (err) {
+					console.error(err);
+				} else {
+					if (!indexInformation['uploadDate']) {
+						conn.db.collection('videos.chunks').createIndex(
+							{ 'uploadDate': 1 },
+							{ expireAfterSeconds: process.env.EXPIRE_AFTER_SECOND }
+						);
+					}
+				}
+			});
+
 			const video = new VideoModel({
 				filename: uploadedFile.filename,
 				contentType: uploadedFile.contentType,
