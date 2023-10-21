@@ -64,21 +64,16 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 		uploadStream.on('finish', async (uploadedFile) => {
 			// indexInformation을 통해 index 유뮤 확인과 expiredAfterSeconds 추가
-			conn.db.collection('videos.files').indexInformation({ full: true }, (err, indexInformation) => {
-				if (err) {
-					console.error(err);
-				} else {
-					if (!indexInformation['uploadDate']) {
-						conn.db.collection('videos.chunks').createIndex(
-							{ 'uploadDate': 1 },
-							{ expireAfterSeconds: process.env.EXPIRE_AFTER_SECOND }
-						);
-					}
-				}
-			});
+			indexInfo = await conn.db.collection('videos.files').indexInformation();
+			if (!indexInfo['uploadDate']) {
+				await conn.db.collection('videos.files').createIndex(
+					{ 'uploadDate': 1 },
+					{ expireAfterSeconds: Number(process.env.EXPIRE_AFTER_SECOND) }
+				);
+			}
 
 			// videos.chunks에서 updateMany와 index 업데이트
-			conn.db.collection('videos.chunks').updateMany(
+			await conn.db.collection('videos.chunks').updateMany(
 				{ files_id: uploadedFile._id },
 				{
 					$set: {
@@ -87,18 +82,13 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 				}
 			);
 
-			conn.db.collection('videos.chunks').indexInformation({ full: true }, (err, indexInformation) => {
-				if (err) {
-					console.error(err);
-				} else {
-					if (!indexInformation['uploadDate']) {
-						conn.db.collection('videos.chunks').createIndex(
-							{ 'uploadDate': 1 },
-							{ expireAfterSeconds: process.env.EXPIRE_AFTER_SECOND }
-						);
-					}
-				}
-			});
+			indexInfo = await conn.db.collection('videos.chunks').indexInformation();
+			if (!indexInfo['uploadDate']) {
+				await conn.db.collection('videos.chunks').createIndex(
+					{ 'uploadDate': 1 },
+					{ expireAfterSeconds: Number(process.env.EXPIRE_AFTER_SECOND) }
+				);
+			}
 
 			const video = new VideoModel({
 				filename: uploadedFile.filename,
