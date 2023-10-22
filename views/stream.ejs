@@ -4,14 +4,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Streaming</title>
+  <title>RUF REPLAY</title>
+  <style>
+    body {
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    h3 {
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
+  <img src="images/logo.png" alt="로고 이미지">
+  <br />
   <video controls width="640" height="360">
     <source src="/video/stream?filename=<%= filename %>" type="video/mp4">
     Your browser does not support the video tag.
   </video>
+  <h3>
+    <%= filename %>
+  </h3>
 </body>
 
 </html>

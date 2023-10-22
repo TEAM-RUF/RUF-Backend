@@ -14,7 +14,6 @@ const videoSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
         required: false,
-        expires: process.env.EXPIRE_AFTER_SECOND,
     },
 });
 

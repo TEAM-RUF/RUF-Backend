@@ -63,6 +63,14 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 
 		uploadStream.on('finish', async (uploadedFile) => {
 			// indexInformation을 통해 index 유뮤 확인과 expiredAfterSeconds 추가
+			indexInfo = await conn.db.collection('videos').indexInformation();
+			if (!indexInfo['uploadDate_1']) {
+				await conn.db.collection('videos').createIndex(
+					{ 'uploadDate': 1 },
+					{ expireAfterSeconds: Number(process.env.EXPIRE_AFTER_SECOND) }
+				);
+			}
+
 			indexInfo = await conn.db.collection('videos.files').indexInformation();
 			if (!indexInfo['uploadDate_1']) {
 				await conn.db.collection('videos.files').createIndex(
