@@ -3,8 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "nodemon server.js",
-    "dev": "nodemon server.js",
+    "start": "nodemon app.js",
+    "dev": "nodemon app.js",
     "build": "webpack",
     "prod": "node dist/final.js"
   },
