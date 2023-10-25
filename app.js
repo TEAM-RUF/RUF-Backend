@@ -49,7 +49,10 @@ mongoose.connect(dbAddress, {
 
 	// 배포시 CORS 조정 필요
 	const corsOptions = {
-		origin: "http://localhost:3000",
+		origin: [
+			"http://localhost:3000",
+			"https://ruf-react-service.vercel.app/"
+		],
 		credentials: true,
 	};
 
