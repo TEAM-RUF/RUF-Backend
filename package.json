@@ -6,7 +6,7 @@
     "start": "nodemon app.js",
     "dev": "nodemon app.js",
     "build": "webpack",
-    "prod": "node dist/final.js"
+    "prod": "node dist/bundle.js"
   },
   "dependencies": {
     "@tensorflow/tfjs": "^4.11.0",

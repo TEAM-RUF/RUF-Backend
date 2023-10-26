@@ -10,30 +10,46 @@ var router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.get('/', function (req, res, next) {
-	const filename = req.query.filename;
-	res.render('stream', { filename });
+router.get('/', async (req, res) => {
+	const videoFile = await VideoModel.findOne({ filename: req.query.email });
+	if (videoFile) {
+		const filename = req.query.filename;
+		res.render('stream', { filename });
+	} else {
+		res.status(500).json({
+			success: false,
+			message: "No such video",
+		});
+	}
 });
 
 router.get('/stream', async (req, res) => {
-	try {
-		const conn = mongoose.connection;
-		const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
-			bucketName: 'videos'
-		});
+	const videoFile = await VideoModel.findOne({ filename: req.query.email });
+	if (videoFile) {
+		try {
+			const conn = mongoose.connection;
+			const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+				bucketName: 'videos'
+			});
 
-		const filename = req.query.filename;
-		const downloadStream = bucket.openDownloadStreamByName(filename);
+			const filename = req.query.filename;
+			const downloadStream = bucket.openDownloadStreamByName(filename);
 
-		res.setHeader('Content-Type', 'video/mp4');
-		res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
+			res.setHeader('Content-Type', 'video/mp4');
+			res.setHeader('Content-Disposition', `inline; filename="${filename}"`);
 
-		downloadStream.pipe(res);
-	} catch (err) {
-		console.error(err);
+			downloadStream.pipe(res);
+		} catch (err) {
+			console.error(err);
+			res.status(500).json({
+				success: false,
+				message: err.message,
+			});
+		}
+	} else {
 		res.status(500).json({
 			success: false,
-			message: err.message,
+			message: "No such video",
 		});
 	}
 });
