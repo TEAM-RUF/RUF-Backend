@@ -11,7 +11,7 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.get('/', async (req, res) => {
-	const videoFile = await VideoModel.findOne({ filename: req.query.email });
+	const videoFile = await VideoModel.findOne({ filename: req.query.filename });
 	if (videoFile) {
 		const filename = req.query.filename;
 		res.render('stream', { filename });
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/stream', async (req, res) => {
-	const videoFile = await VideoModel.findOne({ filename: req.query.email });
+	const videoFile = await VideoModel.findOne({ filename: req.query.filename });
 	if (videoFile) {
 		try {
 			const conn = mongoose.connection;
