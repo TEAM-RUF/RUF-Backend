@@ -8,22 +8,32 @@ router.get("/", (req, res) => {
 });
 
 router.get('/getData', async (req, res) => {
-    console.log(new Date(req.query.startOfDay));
-    console.log(new Date(req.query.endOfDay));
+    try {
+        const startOfDay = new Date(req.query.startOfDay);
+        const endOfDay = new Date(req.query.endOfDay);
 
-    const woData = await workoutData.find({
-        userToken: req.query.token,
-        workoutDate: {
-            $gte: new Date(req.query.startOfDay),
-            $lte: new Date(req.query.endOfDay)
+        console.log(startOfDay);
+        console.log(endOfDay);
+
+        const woData = await workoutData.find({
+            userToken: req.query.userToken,
+            workoutDate: {
+                $gte: startOfDay,
+                $lte: endOfDay
+            }
+        });
+
+        if (woData && woData.length > 0) {
+            res.status(200).json({ woData });
+        } else {
+            res.status(404).json({
+                message: "No workoutData found for the specified date range",
+            });
         }
-    });
-
-    if (woData || !Object.keys(woData).length) {
-        res.status(200).json({ woData });
-    } else {
+    } catch (error) {
+        console.error(error);
         res.status(500).json({
-            message: "No such workoutData",
+            message: "Internal Server Error",
         });
     }
 });
@@ -48,4 +58,5 @@ router.post('/postData', async (req, res) => {
     }
 });
 
-module.exports = router; 
+
+module.exports = router;
