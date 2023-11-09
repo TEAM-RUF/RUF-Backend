@@ -34,11 +34,10 @@ mongoose.connect(dbAddress, {
 
 	console.log("GridFSBucket Setting Completed");
 
-	var indexRouter = require('./routes/index');
-	var authRouter = require('./routes/auth');
-	var surveyRouter = require('./routes/survey');
+	const indexRouter = require('./routes/index');
+	const authRouter = require('./routes/auth');
 	const videoRouter = require('./routes/video');
-	const imageProcRouter = require('./routes/image_proc');
+	const workoutRouter = require('./routes/workout');
 
 	// Body-parser 미들웨어 등록
 	app.use(logger('dev'));
@@ -62,10 +61,8 @@ mongoose.connect(dbAddress, {
 	// 라우팅 설정
 	app.use('/', indexRouter);
 	app.use('/auth', authRouter);
-	app.use('/survey', surveyRouter);
 	app.use('/video', videoRouter);
-	app.use('/imageProc', imageProcRouter);
-
+	app.use('/workout', workoutRouter);
 	console.log("Router Setting Completed");
 
 	app.use(function (req, res, next) {

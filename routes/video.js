@@ -17,7 +17,6 @@ router.get('/', async (req, res) => {
 		res.render('stream', { filename });
 	} else {
 		res.status(500).json({
-			success: false,
 			message: "No such video",
 		});
 	}
