@@ -12,9 +12,6 @@ router.get('/getData', async (req, res) => {
         const startOfDay = new Date(req.query.startOfDay);
         const endOfDay = new Date(req.query.endOfDay);
 
-        console.log(startOfDay);
-        console.log(endOfDay);
-
         const woData = await workoutData.find({
             userToken: req.query.userToken,
             workoutDate: {

@@ -66,4 +66,14 @@ router.get('/login', async (req, res) => {
 	}
 });
 
+router.get('/firebaseSign', async (req, res) => {
+	try {
+	} catch (err) {
+		return res.json({
+			loginSuccess: false,
+			message: err,
+		});
+	}
+});
+
 module.exports = router;
