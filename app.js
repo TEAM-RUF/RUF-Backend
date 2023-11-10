@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const { GridFSBucket } = require('mongodb');
-const firebase = require("firebase-admin");
+const firebaseadm = require("firebase-admin");
 require('dotenv').config();
 
 var app = express();
@@ -44,8 +44,8 @@ mongoose.connect(dbAddress, {
 		appId: process.env.FB_APP_ID
 	};
 
-	firebase.initializeApp(firebaseConfig);
-	console.log("Firebase API Connection Completed");
+	firebaseadm.initializeApp(firebaseConfig);
+	console.log("Firebase SDK Connection Completed");
 
 	const indexRouter = require('./routes/index');
 	const authRouter = require('./routes/auth');

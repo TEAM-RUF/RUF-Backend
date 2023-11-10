@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+const firebaseadm = require("firebase-admin");
 
 const { UserData } = require("../models/userData");
 
@@ -66,12 +67,18 @@ router.get('/login', async (req, res) => {
 	}
 });
 
-router.get('/firebaseSign', async (req, res) => {
+router.post('/firebaseRegister', async (req, res) => {
 	try {
-	} catch (err) {
-		return res.json({
-			loginSuccess: false,
-			message: err,
+		const { email, password } = req.body;
+		await firebaseadm.auth().createUser({ email, password });
+
+		res.status(200).json({
+			message: "Simple Register for testing Firebase auth",
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			message: "Internal Server Error",
 		});
 	}
 });
