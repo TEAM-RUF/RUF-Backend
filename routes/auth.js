@@ -68,20 +68,6 @@ router.get('/login', async (req, res) => {
 	}
 });
 
-router.get('/getFirebaseUserToken', async (req, res) => {
-	try {
-
-		res.status(200).json({
-			message: "Simple Register for testing Firebase auth",
-		});
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({
-			message: "Internal Server Error",
-		});
-	}
-});
-
 // for test only
 router.post('/firebaseRegister', async (req, res) => {
 	try {
