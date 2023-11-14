@@ -7,7 +7,8 @@ var bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require("mongoose");
 const { GridFSBucket } = require('mongodb');
-const firebaseadm = require("firebase-admin");
+var firebase = require("firebase-admin");
+
 require('dotenv').config();
 
 var app = express();
@@ -35,16 +36,13 @@ mongoose.connect(dbAddress, {
 
 	console.log("GridFSBucket Setting Completed");
 
-	const firebaseConfig = {
-		apiKey: process.env.FB_API_KEY,
-		authDomain: process.env.FB_AUTH_DOMAIN,
-		projectId: process.env.FB_PROJECT_ID,
-		storageBucket: process.env.FB_STORAGE_BUCKET,
-		messagingSenderId: process.env.FB_MESSEAGE_SENDER_ID,
-		appId: process.env.FB_APP_ID
-	};
+	// Firebase 설정
+	var serviceAccount = require("./firebase-key.json");
 
-	firebaseadm.initializeApp(firebaseConfig);
+	firebase.initializeApp({
+		credential: firebase.credential.cert(serviceAccount)
+	});
+
 	console.log("Firebase SDK Connection Completed");
 
 	const indexRouter = require('./routes/index');

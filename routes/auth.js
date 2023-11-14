@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-const firebaseadm = require("firebase-admin");
+const firebase = require('firebase-admin');
 
 const { UserData } = require("../models/userData");
+const { log } = require('forever');
 
 // controller로 분리하지 않고 route에서 바로 구현
 router.get("/", (req, res) => {
@@ -67,13 +68,31 @@ router.get('/login', async (req, res) => {
 	}
 });
 
-router.post('/firebaseRegister', async (req, res) => {
+router.get('/getFirebaseUserToken', async (req, res) => {
 	try {
-		const { email, password } = req.body;
-		await firebaseadm.auth().createUser({ email, password });
 
 		res.status(200).json({
 			message: "Simple Register for testing Firebase auth",
+		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).json({
+			message: "Internal Server Error",
+		});
+	}
+});
+
+// for test only
+router.post('/firebaseRegister', async (req, res) => {
+	try {
+		const result = await firebase.auth().createUser({
+			email: req.body.email,
+			password: req.body.password,
+			displayName: req.body.username,
+		});
+
+		res.status(200).json({
+			message: result,
 		});
 	} catch (error) {
 		console.error(error);

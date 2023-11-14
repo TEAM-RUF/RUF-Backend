@@ -3,3 +3,6 @@
 
 ### Env
 .env
+
+### Firebase SDK
+.firebase-key
