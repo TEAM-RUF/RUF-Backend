@@ -12,11 +12,22 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      max-height: 100vh;
+      overflow-y: auto;
+      padding-top: 300px;
+    }
+
+    img {
+      margin-top: 20px;
     }
 
     h3 {
       color: white;
+      margin-top: 10px;
+    }
+
+    video {
+      margin-top: 10px;
     }
   </style>
 </head>
@@ -24,13 +35,15 @@
 <body>
   <img src="images/logo.png" alt="로고 이미지">
   <br />
-  <video controls width="640" height="360">
-    <source src="/video/stream?filename=<%= filename %>" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-  <h3>
-    <%= filename %>
-  </h3>
+  <% for (let i=0; i < filenames.length; i++) { %>
+    <video controls width="640" height="360">
+      <source src="/video/stream?filename=<%= filenames[i] %>" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+    <h3>
+      <%= filenames[i] %>
+    </h3>
+    <% } %>
 </body>
 
 </html>

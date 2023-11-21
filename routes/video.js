@@ -11,16 +11,17 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 router.get('/', async (req, res) => {
-	const videoFile = await VideoModel.findOne({ filename: req.query.filename });
-	if (videoFile) {
-		const filename = req.query.filename;
-		res.render('stream', { filename });
+	const videoFiles = await VideoModel.find({ actToken: req.query.actToken }).sort({ set: 1 });
+	if (videoFiles.length > 0) {
+		const filenames = videoFiles.map(video => video.filename);
+		res.render('stream', { filenames });
 	} else {
 		res.status(500).json({
-			message: "No such video",
+			message: "No videos found for the given ActToken",
 		});
 	}
 });
+
 
 router.get('/stream', async (req, res) => {
 	const videoFile = await VideoModel.findOne({ filename: req.query.filename });
