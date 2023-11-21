@@ -118,6 +118,7 @@ router.post('/upload', upload.single('file'), async (req, res) => {
 				workout: req.body.workout,
 				set: req.body.set,
 				userToken: req.body.userToken,
+				actToken: req.body.actToken,
 			});
 
 			await video.save();

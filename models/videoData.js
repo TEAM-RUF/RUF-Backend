@@ -10,6 +10,10 @@ const videoSchema = new mongoose.Schema({
         type: String,
         // required: true
     },
+    actToken: {         // Video들을 구분하기 위한 ActToken
+        type: String,
+        required: true
+    },
     uploadDate: {
         type: Date,
         default: Date.now,
