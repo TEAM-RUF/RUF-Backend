@@ -12,13 +12,15 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      max-height: 100vh;
       overflow-y: auto;
-      padding-top: 300px;
     }
 
     img {
       margin-top: 20px;
+    }
+
+    video {
+      margin-top: 10px;
     }
 
     h3 {
@@ -26,8 +28,28 @@
       margin-top: 10px;
     }
 
-    video {
+    form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       margin-top: 10px;
+    }
+
+    button {
+      background-color: #cff947;
+      color: black;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      margin-top: 1px;
+      margin-bottom: 50px;
+    }
+
+    button:hover {
+      background-color: #a3cc52;
     }
   </style>
 </head>
@@ -40,9 +62,12 @@
       <source src="/video/stream?filename=<%= filenames[i] %>" type="video/mp4">
       Your browser does not support the video tag.
     </video>
-    <h3>
-      <%= filenames[i] %>
-    </h3>
+    <form action="/video/download" method="post">
+      <input type="hidden" name="filename" value="<%= filenames[i] %>">
+      <button type="submit">
+        <%= i + 1 %>세트 동영상 다운로드
+      </button>
+    </form>
     <% } %>
 </body>
 

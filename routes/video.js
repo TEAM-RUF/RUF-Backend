@@ -54,6 +54,38 @@ router.get('/stream', async (req, res) => {
 	}
 });
 
+router.post('/download', async (req, res) => {
+	const videoFile = await VideoModel.findOne({ filename: req.body.filename });
+	if (videoFile) {
+		try {
+			const conn = mongoose.connection;
+			const bucket = new mongoose.mongo.GridFSBucket(conn.db, {
+				bucketName: 'videos'
+			});
+
+			const filename = req.body.filename;
+			const downloadStream = bucket.openDownloadStreamByName(filename);
+
+			res.setHeader('Content-Type', 'application/octet-stream');
+			res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+
+			downloadStream.pipe(res);
+		} catch (err) {
+			console.error(err);
+			res.status(500).json({
+				success: false,
+				message: err.message,
+			});
+		} //cff947
+	} else {
+		res.status(500).json({
+			success: false,
+			message: "No videos found for the given FileName",
+		});
+	}
+});
+
+
 router.post('/upload', upload.single('file'), async (req, res) => {
 	try {
 		if (!req.file) {
